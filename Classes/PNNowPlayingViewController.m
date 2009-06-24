@@ -24,12 +24,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-	[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
 }
 
