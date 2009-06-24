@@ -6,22 +6,33 @@
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
 
+#import "PNNowPlayingViewController.h"
 #import "PodcastNoteAppDelegate.h"
-
+#import "PNMainTabsViewController.h"
 
 @implementation PodcastNoteAppDelegate
 
 @synthesize window;
+@synthesize navigationController = _navigationController;
+@synthesize nowPlayingViewController = _nowPlayingViewController;
 
 
 #pragma mark -
 #pragma mark Application lifecycle
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {    
-    
-    // Override point for customization after app launch    
-
-	[window makeKeyAndVisible];
+    _navigationController = [[UINavigationController alloc] init];
+	
+	PNMainTabsViewController *mainVC = [[PNMainTabsViewController alloc] initWithNibName:@"PNMainTabsViewController" bundle:nil];
+	_nowPlayingViewController = [[PNNowPlayingViewController alloc] initWithNibName:@"PNNowPlayingViewController" bundle:nil];
+	
+	[_navigationController pushViewController:mainVC animated:NO];
+	[_navigationController pushViewController:_nowPlayingViewController animated:YES];
+	[mainVC release];
+	
+	[window addSubview:_navigationController.view];
+	
+    [window makeKeyAndVisible];
 }
 
 /**
@@ -134,6 +145,8 @@
 #pragma mark Memory management
 
 - (void)dealloc {
+	[_nowPlayingViewController release];
+	[_navigationController release];
 	
     [managedObjectContext release];
     [managedObjectModel release];

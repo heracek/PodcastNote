@@ -11,8 +11,11 @@
     NSManagedObjectModel *managedObjectModel;
     NSManagedObjectContext *managedObjectContext;	    
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
+	
     UIWindow *window;
+	
+	UINavigationController *_navigationController;
+	PNNowPlayingViewController *_nowPlayingViewController;
 }
 
 - (IBAction)saveAction:sender;
@@ -24,6 +27,9 @@
 @property (nonatomic, readonly) NSString *applicationDocumentsDirectory;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
+
+@property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
+@property (nonatomic, retain) IBOutlet PNNowPlayingViewController *nowPlayingViewController;
 
 @end
 
