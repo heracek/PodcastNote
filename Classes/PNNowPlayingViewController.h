@@ -10,7 +10,11 @@
 
 
 @interface PNNowPlayingViewController : UIViewController {
-
+	MPMusicPlayerController *_musicPlayerController;
+	UILabel *_titleLabel;
 }
+
+@property (nonatomic, retain) MPMusicPlayerController *musicPlayerController;
+@property (nonatomic, retain) IBOutlet UILabel *titleLabel;
 
 @end

@@ -6,6 +6,7 @@
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
 
+#import <MediaPlayer/MediaPlayer.h>
 #import "PNNowPlayingViewController.h"
 #import "PodcastNoteAppDelegate.h"
 #import "PNMainTabsViewController.h"
@@ -13,6 +14,7 @@
 @implementation PodcastNoteAppDelegate
 
 @synthesize window;
+@synthesize musicPlayerController = _musicPlayerController;
 @synthesize navigationController = _navigationController;
 @synthesize nowPlayingViewController = _nowPlayingViewController;
 
@@ -20,11 +22,14 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {    
+- (void)applicationDidFinishLaunching:(UIApplication *)application {
+	self.musicPlayerController = [MPMusicPlayerController iPodMusicPlayer];
+	
     _navigationController = [[UINavigationController alloc] init];
 	
 	PNMainTabsViewController *mainVC = [[PNMainTabsViewController alloc] initWithNibName:@"PNMainTabsViewController" bundle:nil];
 	_nowPlayingViewController = [[PNNowPlayingViewController alloc] initWithNibName:@"PNNowPlayingViewController" bundle:nil];
+	_nowPlayingViewController.musicPlayerController = _musicPlayerController;
 	
 	[_navigationController pushViewController:mainVC animated:NO];
 	[_navigationController pushViewController:_nowPlayingViewController animated:YES];
@@ -147,6 +152,8 @@
 - (void)dealloc {
 	[_nowPlayingViewController release];
 	[_navigationController release];
+	
+	[_musicPlayerController release];
 	
     [managedObjectContext release];
     [managedObjectModel release];

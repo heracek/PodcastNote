@@ -19,6 +19,7 @@
 		696A69D10FE2A15C0019251C /* PNMainTabsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 696A69CF0FE2A15C0019251C /* PNMainTabsViewController.xib */; };
 		69B928810FF2C799007C41BB /* PNNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */; };
 		69B928820FF2C799007C41BB /* PNNowPlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */; };
+		69B929550FF2E9B2007C41BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B929540FF2E9B2007C41BB /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		69B9287E0FF2C798007C41BB /* PNNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNowPlayingViewController.h; sourceTree = "<group>"; };
 		69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNowPlayingViewController.m; sourceTree = "<group>"; };
 		69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNNowPlayingViewController.xib; path = Classes/PNNowPlayingViewController.xib; sourceTree = "<group>"; };
+		69B929540FF2E9B2007C41BB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* PodcastNote-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PodcastNote-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -51,6 +53,7 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
 				28D801B40F44B63D00FB423F /* CoreData.framework in Frameworks */,
+				69B929550FF2E9B2007C41BB /* MediaPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +117,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				69B929540FF2E9B2007C41BB /* MediaPlayer.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765A40DF7441C002DB57D /* CoreGraphics.framework */,

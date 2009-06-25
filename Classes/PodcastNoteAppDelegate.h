@@ -14,6 +14,8 @@
 	
     UIWindow *window;
 	
+	MPMusicPlayerController *_musicPlayerController;
+	
 	UINavigationController *_navigationController;
 	PNNowPlayingViewController *_nowPlayingViewController;
 }
@@ -27,6 +29,8 @@
 @property (nonatomic, readonly) NSString *applicationDocumentsDirectory;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
+
+@property (nonatomic, retain) MPMusicPlayerController *musicPlayerController;
 
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet PNNowPlayingViewController *nowPlayingViewController;
