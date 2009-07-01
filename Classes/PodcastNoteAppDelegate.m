@@ -18,7 +18,6 @@
 @synthesize navigationController = _navigationController;
 @synthesize nowPlayingViewController = _nowPlayingViewController;
 
-
 #pragma mark -
 #pragma mark Application lifecycle
 

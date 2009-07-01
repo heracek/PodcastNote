@@ -11,7 +11,6 @@
 
 @implementation PNNowPlayingViewController
 
-@synthesize titleLabel = _titleLabel;
 @synthesize musicPlayerController = _musicPlayerController;
 
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -27,12 +26,39 @@
     return self;
 }
 
+- (void)updateNowPlayingInfo {
+	MPMediaItem *nowPlayingItem = [_musicPlayerController nowPlayingItem];
+	_artistLabel.text = [nowPlayingItem valueForProperty:MPMediaItemPropertyArtist];
+	_titleLabel.text = [nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
+	_albumTitleLabel.text = [nowPlayingItem valueForProperty:MPMediaItemPropertyAlbumTitle];
+	
+	UIImage *artworkImage = nil;// = noArtworkImage;
+	
+	MPMediaItemArtwork *artwork = [nowPlayingItem valueForProperty: MPMediaItemPropertyArtwork];	
+	if (artwork) {
+		artworkImage = [artwork imageWithSize: CGSizeMake (40, 40)];
+	}
+	
+	[_artworkButtonView setBackgroundImage:artworkImage forState:UIControlStateNormal];
+}
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	_titleLabel.text = [[_musicPlayerController nowPlayingItem] valueForProperty:MPMediaItemPropertyTitle];
+	UIBarButtonItem *newBackButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navigationBackButton];
+	self.navigationItem.leftBarButtonItem = newBackButtonItem;
+	[newBackButtonItem release];
+	
+	self.navigationItem.titleView = _navigationItemTitleView;
+	
+	_artworkButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
+	_artworkButtonView.frame = CGRectMake(0, 0, 40, 40);
+	UIBarButtonItem *newArtworkItem = [[UIBarButtonItem alloc] initWithCustomView:_artworkButtonView];
+	self.navigationItem.rightBarButtonItem = newArtworkItem;
+	[newArtworkItem release];
+	
+	[self updateNowPlayingInfo];
 }
 
 /*
@@ -66,8 +92,11 @@
 }
 
 - (void)dealloc {
+	[_nowPlayingBackButton release];
     [super dealloc];
 }
 
-
+- (void)backButtonAction:(id)sender {
+	[self.navigationController popViewControllerAnimated:YES];
+}
 @end

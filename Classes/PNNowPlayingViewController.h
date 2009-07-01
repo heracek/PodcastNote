@@ -11,10 +11,19 @@
 
 @interface PNNowPlayingViewController : UIViewController {
 	MPMusicPlayerController *_musicPlayerController;
-	UILabel *_titleLabel;
+	
+	IBOutlet UIButton *_navigationBackButton;
+	IBOutlet UIView *_navigationItemTitleView;
+	UIButton *_artworkButtonView;
+	
+	IBOutlet UILabel *_artistLabel;
+	IBOutlet UILabel *_titleLabel;
+	IBOutlet UILabel *_albumTitleLabel;
+	IBOutlet UIBarButtonItem *_nowPlayingBackButton;
 }
 
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayerController;
-@property (nonatomic, retain) IBOutlet UILabel *titleLabel;
+
+- (IBAction)backButtonAction:(id)sender;
 
 @end
