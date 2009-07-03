@@ -21,6 +21,8 @@
 		69B928810FF2C799007C41BB /* PNNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */; };
 		69B928820FF2C799007C41BB /* PNNowPlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */; };
 		69B929550FF2E9B2007C41BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B929540FF2E9B2007C41BB /* MediaPlayer.framework */; };
+		69CCB4630FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CCB4610FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m */; };
+		69CCB4640FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,9 @@
 		69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNowPlayingViewController.m; sourceTree = "<group>"; };
 		69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNNowPlayingViewController.xib; path = Classes/PNNowPlayingViewController.xib; sourceTree = "<group>"; };
 		69B929540FF2E9B2007C41BB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		69CCB4600FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNWriteAndViewNotesTableViewController.h; sourceTree = "<group>"; };
+		69CCB4610FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNWriteAndViewNotesTableViewController.m; sourceTree = "<group>"; };
+		69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNWriteAndViewNotesTableViewController.xib; path = Classes/PNWriteAndViewNotesTableViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* PodcastNote-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PodcastNote-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,6 +76,8 @@
 				696A69CE0FE2A15C0019251C /* PNMainTabsViewController.m */,
 				69B9287E0FF2C798007C41BB /* PNNowPlayingViewController.h */,
 				69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */,
+				69CCB4600FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.h */,
+				69CCB4610FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -112,6 +119,7 @@
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				696A69CF0FE2A15C0019251C /* PNMainTabsViewController.xib */,
 				69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */,
+				69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */,
 				8D1107310486CEB800E47090 /* PodcastNote-Info.plist */,
 			);
 			name = Resources;
@@ -183,6 +191,7 @@
 				696A69D10FE2A15C0019251C /* PNMainTabsViewController.xib in Resources */,
 				69B928820FF2C799007C41BB /* PNNowPlayingViewController.xib in Resources */,
 				698E27DF0FF673D10069D408 /* NowPlayingNavigationBackButton.png in Resources */,
+				69CCB4640FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +207,7 @@
 				28C3AD8A0F43EF2300507BA6 /* PodcastNote.xcdatamodel in Sources */,
 				696A69D00FE2A15C0019251C /* PNMainTabsViewController.m in Sources */,
 				69B928810FF2C799007C41BB /* PNNowPlayingViewController.m in Sources */,
+				69CCB4630FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

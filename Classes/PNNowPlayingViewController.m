@@ -71,6 +71,9 @@
 	
 	[self updateNowPlayingInfo:nil];
 	
+	_writeAndViewNotesTVC.view.frame = self.view.bounds;
+	[self.view addSubview:_writeAndViewNotesTVC.view];
+	
 	[self registerForMediaPlayerNotifications];
 }
 

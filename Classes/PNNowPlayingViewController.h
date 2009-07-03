@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PNWriteAndViewNotesTableViewController.h"
 
 @interface PNNowPlayingViewController : UIViewController {
+	IBOutlet PNWriteAndViewNotesTableViewController *_writeAndViewNotesTVC;
+	
 	MPMusicPlayerController *_musicPlayerController;
 	
 	IBOutlet UIButton *_navigationBackButton;

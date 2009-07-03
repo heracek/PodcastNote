@@ -10,6 +10,7 @@
 #import "PNNowPlayingViewController.h"
 #import "PodcastNoteAppDelegate.h"
 #import "PNMainTabsViewController.h"
+#import "PNWriteAndViewNotesTableViewController.h"
 
 @implementation PodcastNoteAppDelegate
 
