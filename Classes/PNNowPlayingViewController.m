@@ -26,7 +26,7 @@
     return self;
 }
 
-- (void)updateNowPlayingInfo {
+- (void)updateNowPlayingInfo:(id)notification {
 	MPMediaItem *nowPlayingItem = [_musicPlayerController nowPlayingItem];
 	_artistLabel.text = [nowPlayingItem valueForProperty:MPMediaItemPropertyArtist];
 	_titleLabel.text = [nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
@@ -40,6 +40,17 @@
 	}
 	
 	[_artworkButtonView setBackgroundImage:artworkImage forState:UIControlStateNormal];
+}
+
+- (void) registerForMediaPlayerNotifications {
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	
+	[notificationCenter addObserver:self
+						   selector:@selector(updateNowPlayingInfo:)
+							   name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+							 object:_musicPlayerController];
+	
+	[_musicPlayerController beginGeneratingPlaybackNotifications];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -58,7 +69,9 @@
 	self.navigationItem.rightBarButtonItem = newArtworkItem;
 	[newArtworkItem release];
 	
-	[self updateNowPlayingInfo];
+	[self updateNowPlayingInfo:nil];
+	
+	[self registerForMediaPlayerNotifications];
 }
 
 /*
@@ -92,6 +105,12 @@
 }
 
 - (void)dealloc {
+	[_musicPlayerController endGeneratingPlaybackNotifications];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+												  object:_musicPlayerController];
+	
 	[_nowPlayingBackButton release];
     [super dealloc];
 }
