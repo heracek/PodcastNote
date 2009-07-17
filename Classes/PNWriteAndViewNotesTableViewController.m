@@ -115,7 +115,20 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 - (void)autosetPlaybackTimeAndItsButtonLabel {
 	_playbackTime = [_delegete getPlaybackTime];
-	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"%f", _playbackTime] forState:UIControlStateNormal];
+	
+	int intPlaybecTime = rint(_playbackTime);
+	int hours = intPlaybecTime / (60 * 60);
+	int minutes = (intPlaybecTime / 60) % 60;
+	int seconds = intPlaybecTime % 60;
+	
+	NSString *stringPlaibackTime;
+	if (hours != 0) {
+		stringPlaibackTime = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+	} else {
+		stringPlaibackTime = [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+	}
+	
+	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"[%@]", stringPlaibackTime] forState:UIControlStateNormal];
 }
 
 #pragma mark -
