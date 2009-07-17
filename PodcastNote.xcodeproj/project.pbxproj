@@ -70,9 +70,9 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				696A69CD0FE2A15B0019251C /* PNMainTabsViewController.h */,
 				1D3623240D0F684500981E51 /* PodcastNoteAppDelegate.h */,
 				1D3623250D0F684500981E51 /* PodcastNoteAppDelegate.m */,
-				696A69CD0FE2A15B0019251C /* PNMainTabsViewController.h */,
 				696A69CE0FE2A15C0019251C /* PNMainTabsViewController.m */,
 				69B9287E0FF2C798007C41BB /* PNNowPlayingViewController.h */,
 				69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */,

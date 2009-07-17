@@ -57,6 +57,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	_writeAndViewNotesTVC.delegate = self;
+	
 	UIBarButtonItem *newBackButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navigationBackButton];
 	self.navigationItem.leftBarButtonItem = newBackButtonItem;
 	[newBackButtonItem release];
@@ -120,5 +122,20 @@
 
 - (void)backButtonAction:(id)sender {
 	[self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark -
+#pragma mark PNWriteAndViewNotesTableViewControllerDelegate methods
+
+- (NSTimeInterval)getPlaybackTime {
+	if (!_musicPlayerController) {
+		return 0.0;
+	}
+	
+	return _musicPlayerController.currentPlaybackTime;
+}
+
+- (void)noteAddedAtPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
+	NSLog(@"add note '%@' at time: %f", text, playbackTime);
 }
 @end

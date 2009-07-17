@@ -8,9 +8,31 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PNWriteAndViewNotesTableViewControllerDelegate
+
+@required
+- (NSTimeInterval)getPlaybackTime;
+- (void)noteAddedAtPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
+
+@end
+
 
 @interface PNWriteAndViewNotesTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+	IBOutlet UIView *_addNoteTextViewWithControls;
 	IBOutlet UIButton *_addNoteButton;
+	IBOutlet UIButton *_addNoteSetPlaybackTime;
+	IBOutlet UITextView *_addNoteTextView;
+	
+	BOOL _isEditingNote;
+	NSTimeInterval _playbackTime;
+	
+	id<PNWriteAndViewNotesTableViewControllerDelegate> _delegete;
 }
+
+@property (nonatomic, retain) id<PNWriteAndViewNotesTableViewControllerDelegate> delegate;
+
+- (IBAction)addNoteButtonAction:(id)sender;
+- (IBAction)addNoteSetPlaybackTimeAction:(id)sender;
+- (IBAction)doneEditingButtonaAction:(id)sender;
 
 @end

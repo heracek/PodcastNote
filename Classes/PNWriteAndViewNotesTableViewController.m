@@ -11,17 +11,21 @@
 
 @implementation PNWriteAndViewNotesTableViewController
 
+@synthesize delegate=_delegete;
+
 static NSString *kNoteCellIdentifier = @"NoteCell";
 
-/*
- // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self == nil) {
+        return nil;
     }
+	
+	_isEditingNote = NO;
+	
     return self;
 }
-*/
+
 
 
 /*
@@ -61,7 +65,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 #pragma mark UITableViewController methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 2;
+	return 10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -78,5 +82,88 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	return cell;
 }
 
+#pragma mark -
+#pragma mark Adding note
+
+- (void)startEditingAddNote {
+	_isEditingNote = YES;
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	
+	_addNoteTextView.text = @"";
+	_addNoteTextViewWithControls.alpha = 0.0;
+	[self.view addSubview:_addNoteTextViewWithControls];
+	[_addNoteTextView becomeFirstResponder];
+}
+
+- (void)stopEditingAddNote {
+	_isEditingNote = NO;
+	[_addNoteTextView resignFirstResponder];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	
+	[_addNoteTextViewWithControls removeFromSuperview];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+	if (_isEditingNote) {
+		[self stopEditingAddNote];
+	}
+}
+
+- (void)autosetPlaybackTimeAndItsButtonLabel {
+	_playbackTime = [_delegete getPlaybackTime];
+	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"%f", _playbackTime] forState:UIControlStateNormal];
+}
+
+#pragma mark -
+#pragma mark button actions
+
+- (IBAction)addNoteSetPlaybackTimeAction:(id)sender {
+	[self autosetPlaybackTimeAndItsButtonLabel];
+}
+
+- (IBAction)addNoteButtonAction:(id)sender {
+	[self autosetPlaybackTimeAndItsButtonLabel];
+	[self startEditingAddNote];
+}
+
+- (IBAction)doneEditingButtonaAction:(id)sender {
+	[self stopEditingAddNote];
+	
+	[_delegete noteAddedAtPlaybackTime:_playbackTime withText:_addNoteTextView.text];
+}
+
+#pragma mark -
+
+- (void)keyboardWillShow:(NSNotification *)aNotification {
+	// the keyboard is showing so resize the table's height
+	CGRect keyboardRect = [[[aNotification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] CGRectValue];
+    NSTimeInterval animationDuration = [[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect frame = self.view.frame;
+    frame.size.height -= keyboardRect.size.height;
+    
+	[UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+	_addNoteTextViewWithControls.alpha = 1.0;
+    self.view.frame = frame;
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillHide:(NSNotification *)aNotification {
+    // the keyboard is hiding reset the table's height
+	CGRect keyboardRect = [[[aNotification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] CGRectValue];
+    NSTimeInterval animationDuration = [[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect frame = self.view.frame;
+    frame.size.height += keyboardRect.size.height;
+	
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+	_addNoteTextViewWithControls.alpha = 0.0;
+    self.view.frame = frame;
+    [UIView commitAnimations];
+}
 
 @end
