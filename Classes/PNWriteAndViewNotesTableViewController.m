@@ -7,7 +7,7 @@
 //
 
 #import "PNWriteAndViewNotesTableViewController.h"
-
+#import "PNNoteTableViewCell.h"
 
 @implementation PNWriteAndViewNotesTableViewController
 
@@ -70,14 +70,15 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSInteger row = [indexPath row];
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kNoteCellIdentifier];
+	PNNoteTableViewCell *cell = (PNNoteTableViewCell *)[tableView dequeueReusableCellWithIdentifier:kNoteCellIdentifier];
 	
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero 
-									   reuseIdentifier:kNoteCellIdentifier] autorelease];
+		cell = [[[PNNoteTableViewCell alloc] initWithFrame:CGRectZero
+										   reuseIdentifier:kNoteCellIdentifier] autorelease];
 	}
 	
-	cell.textLabel.text = [NSString stringWithFormat:@"Item %d", row];
+	cell.timeText = [NSString stringWithFormat:@"[1:00:%02d]", row + 1];
+	cell.noteText = [NSString stringWithFormat:@"Item %d", row];
 	
 	return cell;
 }
