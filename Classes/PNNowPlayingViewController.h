@@ -12,6 +12,7 @@
 @interface PNNowPlayingViewController : UIViewController<PNWriteAndViewNotesTableViewControllerDelegate> {
 	IBOutlet PNWriteAndViewNotesTableViewController *_writeAndViewNotesTVC;
 	
+	NSManagedObjectContext *_managedObjectContext;
 	MPMusicPlayerController *_musicPlayerController;
 	
 	IBOutlet UIButton *_navigationBackButton;
@@ -24,6 +25,7 @@
 	IBOutlet UIBarButtonItem *_nowPlayingBackButton;
 }
 
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayerController;
 
 - (IBAction)backButtonAction:(id)sender;

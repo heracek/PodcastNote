@@ -11,6 +11,7 @@
 
 @implementation PNNowPlayingViewController
 
+@synthesize managedObjectContext = _managedObjectContext;
 @synthesize musicPlayerController = _musicPlayerController;
 
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -135,7 +136,12 @@
 	return _musicPlayerController.currentPlaybackTime;
 }
 
-- (void)noteAddedAtPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
-	NSLog(@"add note '%@' at time: %f", text, playbackTime);
+- (MPMediaItem *)getNowPlayingMediaItem {
+	if (!_musicPlayerController) {
+		return nil;
+	}
+	
+	return [_musicPlayerController nowPlayingItem];
 }
+
 @end

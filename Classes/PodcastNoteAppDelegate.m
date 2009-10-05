@@ -29,6 +29,7 @@
 	
 	PNMainTabsViewController *mainVC = [[PNMainTabsViewController alloc] initWithNibName:@"PNMainTabsViewController" bundle:nil];
 	_nowPlayingViewController = [[PNNowPlayingViewController alloc] initWithNibName:@"PNNowPlayingViewController" bundle:nil];
+	_nowPlayingViewController.managedObjectContext = self.managedObjectContext;
 	_nowPlayingViewController.musicPlayerController = _musicPlayerController;
 	
 	[_navigationController pushViewController:mainVC animated:NO];

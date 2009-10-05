@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @protocol PNWriteAndViewNotesTableViewControllerDelegate
 
 @required
 - (NSTimeInterval)getPlaybackTime;
-- (void)noteAddedAtPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
+- (MPMediaItem *)getNowPlayingMediaItem;
+- (NSManagedObjectContext *)managedObjectContext;
 
 @end
 
@@ -25,14 +27,21 @@
 	
 	BOOL _isEditingNote;
 	NSTimeInterval _playbackTime;
+	MPMediaItem *_mediaItem;
 	
-	id<PNWriteAndViewNotesTableViewControllerDelegate> _delegete;
+	NSMutableArray *_notesArray;
+	
+	id<PNWriteAndViewNotesTableViewControllerDelegate> _delegate;
 }
+
+@property (nonatomic, retain) NSMutableArray *notesArray;
+@property (nonatomic, retain) MPMediaItem *mediaItem;
 
 @property (nonatomic, retain) id<PNWriteAndViewNotesTableViewControllerDelegate> delegate;
 
 - (IBAction)addNoteButtonAction:(id)sender;
 - (IBAction)addNoteSetPlaybackTimeAction:(id)sender;
 - (IBAction)doneEditingButtonaAction:(id)sender;
+- (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
 
 @end

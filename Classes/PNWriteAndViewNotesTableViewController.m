@@ -8,10 +8,15 @@
 
 #import "PNWriteAndViewNotesTableViewController.h"
 #import "PNNoteTableViewCell.h"
+#import "PNMusicItem.h"
+#import "PNNote.h"
 
 @implementation PNWriteAndViewNotesTableViewController
 
-@synthesize delegate=_delegete;
+@synthesize notesArray=_notesArray;
+@synthesize mediaItem=_mediaItem;
+
+@synthesize delegate=_delegate;
 
 static NSString *kNoteCellIdentifier = @"NoteCell";
 
@@ -58,6 +63,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 
 - (void)dealloc {
+	[_notesArray release];
     [super dealloc];
 }
 
@@ -115,7 +121,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (void)autosetPlaybackTimeAndItsButtonLabel {
-	_playbackTime = [_delegete getPlaybackTime];
+	_playbackTime = [_delegate getPlaybackTime];
 	
 	int intPlaybecTime = rint(_playbackTime);
 	int hours = intPlaybecTime / (60 * 60);
@@ -140,6 +146,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (IBAction)addNoteButtonAction:(id)sender {
+	self.mediaItem = [_delegate getNowPlayingMediaItem];
 	[self autosetPlaybackTimeAndItsButtonLabel];
 	[self startEditingAddNote];
 }
@@ -147,7 +154,56 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (IBAction)doneEditingButtonaAction:(id)sender {
 	[self stopEditingAddNote];
 	
-	[_delegete noteAddedAtPlaybackTime:_playbackTime withText:_addNoteTextView.text];
+	[self noteAddedToMediaItem:_mediaItem atPlaybackTime:_playbackTime withText:_addNoteTextView.text];
+}
+
+- (PNMusicItem *)getOrCreatePNMusicItemFromMediaItem:(MPMediaItem *)mediaItem {
+	NSManagedObjectContext *moc = [_delegate managedObjectContext];
+	NSEntityDescription *entityDescription = [NSEntityDescription 
+											  entityForName:@"PNMusicItem"
+											  inManagedObjectContext:moc];
+	
+	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+	[request setEntity:entityDescription];
+	
+	NSNumber *persistentID = [mediaItem valueForProperty:MPMediaItemPropertyPersistentID];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:
+							  @"persistentID == %@", persistentID];
+	[request setPredicate:predicate];
+	
+	[request setFetchLimit:1];
+	
+	PNMusicItem *pnMusicItem = nil;
+	
+	NSError *error;
+	NSArray *array = [moc executeFetchRequest:request error:&error];
+	if (array == nil || [array count] == 0) {
+		pnMusicItem = (PNMusicItem *)[NSEntityDescription
+									  insertNewObjectForEntityForName:@"PNMusicItem"
+									  inManagedObjectContext:moc];
+		pnMusicItem.persistentID = persistentID;
+	} else {
+		pnMusicItem = [array objectAtIndex:0];
+	}
+	
+	return pnMusicItem;
+}
+
+- (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
+	NSLog(@"add note '%@' at time: %f", text, playbackTime);
+	
+	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:[_delegate managedObjectContext]];
+	note.musicItem = [self getOrCreatePNMusicItemFromMediaItem:mediaItem];
+	note.text = text;
+	note.timeAdded = [NSDate date];
+	note.playbackTime = [NSNumber numberWithDouble:playbackTime];
+	
+	NSError *error;
+	if (![[_delegate managedObjectContext] save:&error]) {
+		// Handle the error.
+		NSLog(@"Error while saving note: %@, %@", error, [error userInfo]);
+	}
+	// TODO: reload data
 }
 
 #pragma mark -
