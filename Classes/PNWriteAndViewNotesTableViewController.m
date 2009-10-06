@@ -13,9 +13,10 @@
 
 @implementation PNWriteAndViewNotesTableViewController
 
+@synthesize tableView=_tableView;
+@synthesize fetchedResultsController=_fetchedResultsController;
 @synthesize notesArray=_notesArray;
 @synthesize mediaItem=_mediaItem;
-
 @synthesize delegate=_delegate;
 
 static NSString *kNoteCellIdentifier = @"NoteCell";
@@ -33,12 +34,22 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	NSError *error;
+	if (![[self fetchedResultsController] performFetch:&error]) {
+		// Update to handle the error appropriately.
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		exit(-1);  // Fail
+	}
 }
-*/
+
+- (void)viewWillAppear {
+	[self.tableView reloadData];
+}
 
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -59,6 +70,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	self.fetchedResultsController = nil;
 }
 
 
@@ -71,23 +83,157 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 #pragma mark UITableViewController methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 10;
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
+	return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSInteger row = [indexPath row];
-	PNNoteTableViewCell *cell = (PNNoteTableViewCell *)[tableView dequeueReusableCellWithIdentifier:kNoteCellIdentifier];
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kNoteCellIdentifier];
 	
 	if (cell == nil) {
-		cell = [[[PNNoteTableViewCell alloc] initWithFrame:CGRectZero
-										   reuseIdentifier:kNoteCellIdentifier] autorelease];
+		cell = [[[PNNoteTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:kNoteCellIdentifier] autorelease];
 	}
 	
-	cell.timeText = [NSString stringWithFormat:@"[1:00:%02d]", row + 1];
-	cell.noteText = [NSString stringWithFormat:@"Item %d", row];
-	
+	[self configureCell:cell atIndexPath:indexPath];
 	return cell;
 }
+
+- (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
+	PNNoteTableViewCell *cell = (PNNoteTableViewCell *)aCell;
+	
+	PNNote* note = (PNNote *)[_fetchedResultsController objectAtIndexPath:indexPath];
+	
+	cell.timeText = [self stringFromPlaybackTime:[note.playbackTime doubleValue]];
+	cell.noteText = note.text;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+		
+		// Delete the managed object.
+		NSManagedObjectContext *context = [_fetchedResultsController managedObjectContext];
+		[context deleteObject:[_fetchedResultsController objectAtIndexPath:indexPath]];
+		
+		NSError *error;
+		if (![context save:&error]) {
+			// Update to handle the error appropriately.
+			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+    }   
+}
+
+#pragma mark -
+#pragma mark Selection and moving
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // The table view should not be re-orderable.
+    return NO;
+}
+
+#pragma mark -
+#pragma mark Fetched results controller
+
+/**
+ Returns the fetched results controller. Creates and configures the controller if necessary.
+ */
+- (NSFetchedResultsController *)fetchedResultsController {
+    
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+	// Create and configure a fetch request with the Book entity.
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	NSManagedObjectContext *moc = [_delegate managedObjectContext];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PNNote" inManagedObjectContext:moc];
+	[fetchRequest setEntity:entity];
+	
+	PNMusicItem *musicItem = (PNMusicItem *)[self getOrCreatePNMusicItemFromMediaItem:[_delegate getNowPlayingMediaItem]];
+	
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:
+							  @"musicItem == %@", musicItem];
+	[fetchRequest setPredicate:predicate];
+	
+	// Create the sort descriptors array.
+	NSSortDescriptor *playbackTimeDescriptor = [[NSSortDescriptor alloc] initWithKey:@"playbackTime" ascending:YES];
+	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:playbackTimeDescriptor, nil];
+	[fetchRequest setSortDescriptors:sortDescriptors];
+	
+	// Create and initialize the fetch results controller.
+	NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc]
+															 initWithFetchRequest:fetchRequest
+															 managedObjectContext:moc
+															 sectionNameKeyPath:nil
+															 cacheName:nil];
+	self.fetchedResultsController = aFetchedResultsController;
+	_fetchedResultsController.delegate = self;
+	
+	// Memory management.
+	[aFetchedResultsController release];
+	[fetchRequest release];
+	[playbackTimeDescriptor release];
+	[sortDescriptors release];
+	
+	return _fetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+	// The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+	[self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+	
+	UITableView *tableView = self.tableView;
+	
+	switch(type) {
+			
+		case NSFetchedResultsChangeInsert:
+			[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+			break;
+			
+		case NSFetchedResultsChangeDelete:
+			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			break;
+			
+		case NSFetchedResultsChangeUpdate:
+			[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+			break;
+			
+		case NSFetchedResultsChangeMove:
+			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			// Reloading the section inserts a new row and ensures that titles are updated appropriately.
+			[tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+			break;
+	}
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+	
+	switch(type) {
+			
+		case NSFetchedResultsChangeInsert:
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+			break;
+			
+		case NSFetchedResultsChangeDelete:
+			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+			break;
+	}
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+	// The fetch controller has sent all current change notifications, so tell the table view to process all updates.
+	[self.tableView endUpdates];
+}
+
 
 #pragma mark -
 #pragma mark Adding note
@@ -120,10 +266,8 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	}
 }
 
-- (void)autosetPlaybackTimeAndItsButtonLabel {
-	_playbackTime = [_delegate getPlaybackTime];
-	
-	int intPlaybecTime = rint(_playbackTime);
+- (NSString *)stringFromPlaybackTime:(NSTimeInterval)playbackTime {
+	int intPlaybecTime = rint(playbackTime);
 	int hours = intPlaybecTime / (60 * 60);
 	int minutes = (intPlaybecTime / 60) % 60;
 	int seconds = intPlaybecTime % 60;
@@ -135,6 +279,12 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 		stringPlaibackTime = [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
 	}
 	
+	return stringPlaibackTime;
+}
+
+- (void)autosetPlaybackTimeAndItsButtonLabel {
+	_playbackTime = [_delegate getPlaybackTime];
+	NSString *stringPlaibackTime = [self stringFromPlaybackTime:_playbackTime];
 	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"[%@]", stringPlaibackTime] forState:UIControlStateNormal];
 }
 

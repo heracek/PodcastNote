@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "PNMusicItem.h"
 
 @protocol PNWriteAndViewNotesTableViewControllerDelegate
 
@@ -19,11 +20,14 @@
 @end
 
 
-@interface PNWriteAndViewNotesTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface PNWriteAndViewNotesTableViewController : UIViewController <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate> {
+	IBOutlet UITableView *_tableView;
 	IBOutlet UIView *_addNoteTextViewWithControls;
 	IBOutlet UIButton *_addNoteButton;
 	IBOutlet UIButton *_addNoteSetPlaybackTime;
 	IBOutlet UITextView *_addNoteTextView;
+	
+	NSFetchedResultsController *_fetchedResultsController;
 	
 	BOOL _isEditingNote;
 	NSTimeInterval _playbackTime;
@@ -34,14 +38,18 @@
 	id<PNWriteAndViewNotesTableViewControllerDelegate> _delegate;
 }
 
+@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSMutableArray *notesArray;
 @property (nonatomic, retain) MPMediaItem *mediaItem;
-
 @property (nonatomic, retain) id<PNWriteAndViewNotesTableViewControllerDelegate> delegate;
 
 - (IBAction)addNoteButtonAction:(id)sender;
 - (IBAction)addNoteSetPlaybackTimeAction:(id)sender;
 - (IBAction)doneEditingButtonaAction:(id)sender;
 - (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
+- (NSString *)stringFromPlaybackTime:(NSTimeInterval)playbackTime;
+- (PNMusicItem *)getOrCreatePNMusicItemFromMediaItem:(MPMediaItem *)mediaItem;
+- (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath;
 
 @end
