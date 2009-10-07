@@ -336,6 +336,31 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 		pnMusicItem = [array objectAtIndex:0];
 	}
 	
+	pnMusicItem.mediaType = [mediaItem valueForProperty:MPMediaItemPropertyMediaType];
+	pnMusicItem.title = [mediaItem valueForProperty:MPMediaItemPropertyTitle];
+	pnMusicItem.albumTitle = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTitle];
+	pnMusicItem.artist = [mediaItem valueForProperty:MPMediaItemPropertyArtist];
+	pnMusicItem.albumArtist = [mediaItem valueForProperty:MPMediaItemPropertyAlbumArtist];
+	pnMusicItem.genre = [mediaItem valueForProperty:MPMediaItemPropertyGenre];
+	pnMusicItem.composer = [mediaItem valueForProperty:MPMediaItemPropertyComposer];
+	pnMusicItem.playbackDuration = [mediaItem valueForProperty:MPMediaItemPropertyPlaybackDuration];
+	pnMusicItem.albumTrackNumber = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTrackNumber];
+	pnMusicItem.albumTrackCount = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTrackCount];
+	pnMusicItem.discNumber = [mediaItem valueForProperty:MPMediaItemPropertyDiscNumber];
+	pnMusicItem.discCount = [mediaItem valueForProperty:MPMediaItemPropertyDiscCount];
+	
+	//pnMusicItem.artwork = [mediaItem valueForProperty:MPMediaItemPropertyArtwork];
+	
+	pnMusicItem.lyrics = [mediaItem valueForProperty:MPMediaItemPropertyLyrics];
+	pnMusicItem.isCompilation = [mediaItem valueForProperty:MPMediaItemPropertyIsCompilation];
+	
+	pnMusicItem.podcastTitle = [mediaItem valueForProperty:MPMediaItemPropertyPodcastTitle];
+	
+	pnMusicItem.playCount = [mediaItem valueForProperty:MPMediaItemPropertyPlayCount];
+	pnMusicItem.skipCount = [mediaItem valueForProperty:MPMediaItemPropertySkipCount];
+	pnMusicItem.rating = [mediaItem valueForProperty:MPMediaItemPropertyRating];
+	pnMusicItem.lastPlayedDate = [mediaItem valueForProperty:MPMediaItemPropertyLastPlayedDate];
+	
 	return pnMusicItem;
 }
 
