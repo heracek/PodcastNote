@@ -6,6 +6,8 @@
 //  Copyright __MyCompanyName__ 2009. All rights reserved.
 //
 
+#import "PNMainTabsViewController.h"
+
 @interface PodcastNoteAppDelegate : NSObject <UIApplicationDelegate> {
 
     NSManagedObjectModel *managedObjectModel;
@@ -17,6 +19,7 @@
 	MPMusicPlayerController *_musicPlayerController;
 	
 	UINavigationController *_navigationController;
+	IBOutlet PNMainTabsViewController *_tabsController;
 	PNNowPlayingViewController *_nowPlayingViewController;
 }
 

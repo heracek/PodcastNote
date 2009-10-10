@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PNMusicItemsTableViewController.h"
 
 @interface PNMainTabsViewController : UITabBarController {
+	NSManagedObjectContext *_managedObjectContext;
 	
+	IBOutlet PNMusicItemsTableViewController *_musicItemsTableViewController;
 }
+
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) PNMusicItemsTableViewController *musicItemsTableViewController;
 
 @end

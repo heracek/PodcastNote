@@ -27,6 +27,7 @@
 		69B929550FF2E9B2007C41BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B929540FF2E9B2007C41BB /* MediaPlayer.framework */; };
 		69CCB4630FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CCB4610FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m */; };
 		69CCB4640FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */; };
+		69EC75CF1080830D00E03BD2 /* PNMusicItemsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EC75CE1080830D00E03BD2 /* PNMusicItemsTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,8 @@
 		69CCB4600FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNWriteAndViewNotesTableViewController.h; sourceTree = "<group>"; };
 		69CCB4610FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNWriteAndViewNotesTableViewController.m; sourceTree = "<group>"; };
 		69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNWriteAndViewNotesTableViewController.xib; path = Classes/PNWriteAndViewNotesTableViewController.xib; sourceTree = "<group>"; };
+		69EC75CD1080830D00E03BD2 /* PNMusicItemsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNMusicItemsTableViewController.h; sourceTree = "<group>"; };
+		69EC75CE1080830D00E03BD2 /* PNMusicItemsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNMusicItemsTableViewController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* PodcastNote-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PodcastNote-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,6 +90,8 @@
 				1D3623250D0F684500981E51 /* PodcastNoteAppDelegate.m */,
 				696A69CD0FE2A15B0019251C /* PNMainTabsViewController.h */,
 				696A69CE0FE2A15C0019251C /* PNMainTabsViewController.m */,
+				69EC75CD1080830D00E03BD2 /* PNMusicItemsTableViewController.h */,
+				69EC75CE1080830D00E03BD2 /* PNMusicItemsTableViewController.m */,
 				69B9287E0FF2C798007C41BB /* PNNowPlayingViewController.h */,
 				69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */,
 				69CCB4600FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.h */,
@@ -240,6 +245,7 @@
 				6931FCCE10602E6C00601942 /* PNNoteTableViewCell.m in Sources */,
 				691A459D1065285800A92B39 /* PNMusicItem.m in Sources */,
 				691A459E1065285800A92B39 /* PNNote.m in Sources */,
+				69EC75CF1080830D00E03BD2 /* PNMusicItemsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

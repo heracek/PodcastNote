@@ -171,6 +171,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	// Create and configure a fetch request with the Book entity.
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	NSManagedObjectContext *moc = [_delegate managedObjectContext];
+	NSLog(@"Note moc: %@", moc);
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PNNote" inManagedObjectContext:moc];
 	[fetchRequest setEntity:entity];
 	

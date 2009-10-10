@@ -9,7 +9,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "PNNowPlayingViewController.h"
 #import "PodcastNoteAppDelegate.h"
-#import "PNMainTabsViewController.h"
 #import "PNWriteAndViewNotesTableViewController.h"
 
 @implementation PodcastNoteAppDelegate
@@ -27,14 +26,15 @@
 	
     _navigationController = [[UINavigationController alloc] init];
 	
-	PNMainTabsViewController *mainVC = [[PNMainTabsViewController alloc] initWithNibName:@"PNMainTabsViewController" bundle:nil];
+	NSLog(@"setting _tabsController.managedObjectContext to: %@", self.managedObjectContext);
+	_tabsController.managedObjectContext = self.managedObjectContext;
+	
 	_nowPlayingViewController = [[PNNowPlayingViewController alloc] initWithNibName:@"PNNowPlayingViewController" bundle:nil];
 	_nowPlayingViewController.managedObjectContext = self.managedObjectContext;
 	_nowPlayingViewController.musicPlayerController = _musicPlayerController;
 	
-	[_navigationController pushViewController:mainVC animated:NO];
+	[_navigationController pushViewController:_tabsController animated:NO];
 	[_navigationController pushViewController:_nowPlayingViewController animated:YES];
-	[mainVC release];
 	
 	[window addSubview:_navigationController.view];
 	
@@ -151,6 +151,7 @@
 #pragma mark Memory management
 
 - (void)dealloc {
+	[_tabsController release];
 	[_nowPlayingViewController release];
 	[_navigationController release];
 	
