@@ -24,22 +24,33 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	self.musicPlayerController = [MPMusicPlayerController iPodMusicPlayer];
 	
-    _navigationController = [[UINavigationController alloc] init];
-	
-	NSLog(@"setting _tabsController.managedObjectContext to: %@", self.managedObjectContext);
 	_tabsController.managedObjectContext = self.managedObjectContext;
 	
 	_nowPlayingViewController = [[PNNowPlayingViewController alloc] initWithNibName:@"PNNowPlayingViewController" bundle:nil];
 	_nowPlayingViewController.managedObjectContext = self.managedObjectContext;
 	_nowPlayingViewController.musicPlayerController = _musicPlayerController;
 	
-	[_navigationController pushViewController:_tabsController animated:NO];
-	[_navigationController pushViewController:_nowPlayingViewController animated:YES];
+	UIBarButtonItem *nowPlayingBarButtonItem = [[UIBarButtonItem alloc]
+												initWithTitle:@"Now Playing"
+												style:UIBarButtonItemStyleBordered
+												target:self
+												action:@selector(nowPlayingBarButtonItemAction:)];
+	_tabsController.nowPlayingBarButtonItem = nowPlayingBarButtonItem;
 	
-	[window addSubview:_navigationController.view];
+	UINavigationController *activeNavigationController = [_tabsController.viewControllers objectAtIndex:0];
+	activeNavigationController.topViewController.navigationItem.rightBarButtonItem = nowPlayingBarButtonItem;
+	[activeNavigationController pushViewController:_nowPlayingViewController animated:NO];
+	
+	[window addSubview:_tabsController.view];
 	
     [window makeKeyAndVisible];
 }
+
+-(void) nowPlayingBarButtonItemAction:(id) sender {
+	UINavigationController *nc = (UINavigationController *)_tabsController.selectedViewController;
+	[nc pushViewController:_nowPlayingViewController animated:YES];
+}
+
 
 /**
  applicationWillTerminate: saves changes in the application's managed object context before the application terminates.
@@ -153,7 +164,7 @@
 - (void)dealloc {
 	[_tabsController release];
 	[_nowPlayingViewController release];
-	[_navigationController release];
+//	[_navigationController release];
 	
 	[_musicPlayerController release];
 	

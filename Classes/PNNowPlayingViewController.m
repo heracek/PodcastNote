@@ -24,6 +24,8 @@
 	
 	self.title = @"Now Playing";
 	
+	self.hidesBottomBarWhenPushed = YES;
+	
     return self;
 }
 

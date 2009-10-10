@@ -209,7 +209,7 @@
 	// Create the sort descriptors array.
 	NSSortDescriptor *albumTitleDescriptor = [[NSSortDescriptor alloc] initWithKey:@"albumTitle" ascending:YES];
 	NSSortDescriptor *titleDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
-	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:titleDescriptor, nil];
+	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:albumTitleDescriptor, titleDescriptor, nil];
 	[fetchRequest setSortDescriptors:sortDescriptors];
 	
 	// Create and initialize the fetch results controller.
