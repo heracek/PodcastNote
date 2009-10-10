@@ -82,12 +82,32 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 #pragma mark -
 #pragma mark UITableViewController methods
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // iPhone OS 3.0 workaround (not needed on 3.1)
+	NSUInteger count = [[_fetchedResultsController sections] count];
+	
+    if (count == 0) {
+        count = 1;
+    }
+	
+    return count;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	id <NSFetchedResultsSectionInfo> sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
-	return [sectionInfo numberOfObjects];
+    // iPhone OS 3.0 incompatibility workaround (not required on 3.1)
+	NSArray *sections = [_fetchedResultsController sections];
+    NSUInteger count = 0;
+	
+    if ([sections count]) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:section];
+        count = [sectionInfo numberOfObjects];
+    }
+	
+    return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	// iPhone OS 3.0 incompatibility workaround (not required on 3.1)
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kNoteCellIdentifier];
 	
 	if (cell == nil) {
@@ -110,7 +130,6 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		
 		// Delete the managed object.
 		NSManagedObjectContext *context = [_fetchedResultsController managedObjectContext];
 		[context deleteObject:[_fetchedResultsController objectAtIndexPath:indexPath]];
@@ -121,7 +140,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			exit(-1);  // Fail
 		}
-    }   
+    }
 }
 
 #pragma mark -
@@ -184,47 +203,61 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	return _fetchedResultsController;
 }
 
+/**
+ Delegate methods of NSFetchedResultsController to respond to additions, removals and so on.
+ */
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
 	// The fetch controller is about to start sending change notifications, so prepare the table view for updates.
 	[self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+		   atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+	
+	UITableView *tableView = self.tableView;
+	
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+					 withRowAnimation:UITableViewRowAnimationFade];
+            break;
+			
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+					 withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath
+	 forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	
 	UITableView *tableView = self.tableView;
 	
 	switch(type) {
 			
 		case NSFetchedResultsChangeInsert:
-			[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+			[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
+							 withRowAnimation:UITableViewRowAnimationFade];
 			break;
 			
 		case NSFetchedResultsChangeDelete:
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+							 withRowAnimation:UITableViewRowAnimationFade];
 			break;
 			
 		case NSFetchedResultsChangeUpdate:
-			[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+			[self configureCell:[tableView cellForRowAtIndexPath:indexPath]
+					atIndexPath:indexPath];
 			break;
 			
 		case NSFetchedResultsChangeMove:
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+							 withRowAnimation:UITableViewRowAnimationFade];
 			// Reloading the section inserts a new row and ensures that titles are updated appropriately.
-			[tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.section] withRowAnimation:UITableViewRowAnimationFade];
-			break;
-	}
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-	
-	switch(type) {
-			
-		case NSFetchedResultsChangeInsert:
-			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-			break;
-			
-		case NSFetchedResultsChangeDelete:
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.section]
+					 withRowAnimation:UITableViewRowAnimationFade];
 			break;
 	}
 }
@@ -365,7 +398,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
-	NSLog(@"add note '%@' at time: %f", text, playbackTime);
+	NSLog(@"add note '%@' at time: %f for mediaItem: %@", text, playbackTime, mediaItem);
 	
 	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:[_delegate managedObjectContext]];
 	note.musicItem = [self getOrCreatePNMusicItemFromMediaItem:mediaItem];
