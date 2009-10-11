@@ -14,8 +14,6 @@
 
 @required
 - (NSTimeInterval)getPlaybackTime;
-- (MPMediaItem *)getNowPlayingMediaItem;
-- (NSManagedObjectContext *)managedObjectContext;
 
 @end
 
@@ -35,6 +33,8 @@
 	
 	NSMutableArray *_notesArray;
 	
+	NSManagedObjectContext *_managedObjectContext;
+	
 	id<PNWriteAndViewNotesTableViewControllerDelegate> _delegate;
 }
 
@@ -42,6 +42,7 @@
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSMutableArray *notesArray;
 @property (nonatomic, retain) MPMediaItem *mediaItem;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) id<PNWriteAndViewNotesTableViewControllerDelegate> delegate;
 
 - (IBAction)addNoteButtonAction:(id)sender;

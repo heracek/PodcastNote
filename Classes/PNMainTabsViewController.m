@@ -26,8 +26,7 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	NSLog(@"PNMainTabsViewController viewDidLoad");
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 //	UINavigationController *vc = [self.viewControllers objectAtIndex:0];
 //	vc.topViewController.navigationItem.rightBarButtonItem = _nowPlayingBarButtonItem;

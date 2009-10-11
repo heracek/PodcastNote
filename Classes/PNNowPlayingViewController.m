@@ -58,8 +58,10 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
+	_writeAndViewNotesTVC.mediaItem = [_musicPlayerController nowPlayingItem];
+	_writeAndViewNotesTVC.managedObjectContext = _managedObjectContext;
 	_writeAndViewNotesTVC.delegate = self;
 	
 	UIBarButtonItem *newBackButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navigationBackButton];
@@ -136,14 +138,6 @@
 	}
 	
 	return _musicPlayerController.currentPlaybackTime;
-}
-
-- (MPMediaItem *)getNowPlayingMediaItem {
-	if (!_musicPlayerController) {
-		return nil;
-	}
-	
-	return [_musicPlayerController nowPlayingItem];
 }
 
 @end

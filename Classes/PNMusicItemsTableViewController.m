@@ -37,7 +37,6 @@
 	
 	if (_fetchedResultsController == nil) {
 		NSError *error;
-		NSLog(@"PNMusicItemsTableViewController viewWillAppear");
 		if (![[self fetchedResultsController] performFetch:&error]) {
 			// Update to handle the error appropriately.
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -93,8 +92,7 @@
         count = 1;
     }
 	
-	NSLog(@"numberOfSectionsInTableView: %d", count);
-    return count;
+	return count;
 }
 
 
@@ -109,15 +107,14 @@
         count = [sectionInfo numberOfObjects];
     }
 	
-	NSLog(@"numberOfRowsInSection(%d): %d", section, count);
-    return count;
+	return count;
 }
 
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
 	PNMusicItem* musicItem = (PNMusicItem *)[_fetchedResultsController objectAtIndexPath:indexPath];
 	
 	aCell.textLabel.text = musicItem.title;
-	aCell.detailTextLabel.text = [NSString stringWithFormat:@"%qu", musicItem.persistentID];
+	aCell.detailTextLabel.text = [NSString stringWithFormat:@"%qu", [musicItem.persistentID unsignedLongLongValue]];
 }
 
 // Customize the appearance of table view cells.
@@ -202,7 +199,6 @@
 	// Create and configure a fetch request with the Book entity.
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	NSManagedObjectContext *moc = self.managedObjectContext;
-	NSLog(@"MusicItem moc: %@", moc);
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PNMusicItem" inManagedObjectContext:moc];
 	[fetchRequest setEntity:entity];
 	

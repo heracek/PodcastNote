@@ -17,6 +17,7 @@
 @synthesize fetchedResultsController=_fetchedResultsController;
 @synthesize notesArray=_notesArray;
 @synthesize mediaItem=_mediaItem;
+@synthesize managedObjectContext=_managedObjectContext;
 @synthesize delegate=_delegate;
 
 static NSString *kNoteCellIdentifier = @"NoteCell";
@@ -37,7 +38,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 	NSError *error;
 	if (![[self fetchedResultsController] performFetch:&error]) {
@@ -131,11 +132,10 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// Delete the managed object.
-		NSManagedObjectContext *context = [_fetchedResultsController managedObjectContext];
-		[context deleteObject:[_fetchedResultsController objectAtIndexPath:indexPath]];
+		[_managedObjectContext deleteObject:[_fetchedResultsController objectAtIndexPath:indexPath]];
 		
 		NSError *error;
-		if (![context save:&error]) {
+		if (![_managedObjectContext save:&error]) {
 			// Update to handle the error appropriately.
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			exit(-1);  // Fail
@@ -170,12 +170,11 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
     
 	// Create and configure a fetch request with the Book entity.
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	NSManagedObjectContext *moc = [_delegate managedObjectContext];
-	NSLog(@"Note moc: %@", moc);
+	NSManagedObjectContext *moc = _managedObjectContext;
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PNNote" inManagedObjectContext:moc];
 	[fetchRequest setEntity:entity];
 	
-	PNMusicItem *musicItem = (PNMusicItem *)[self getOrCreatePNMusicItemFromMediaItem:[_delegate getNowPlayingMediaItem]];
+	PNMusicItem *musicItem = (PNMusicItem *)[self getOrCreatePNMusicItemFromMediaItem:_mediaItem];
 	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:
 							  @"musicItem == %@", musicItem];
@@ -317,7 +316,10 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (void)autosetPlaybackTimeAndItsButtonLabel {
-	_playbackTime = [_delegate getPlaybackTime];
+	_playbackTime = 0;
+	if (_delegate != nil) {
+		_playbackTime = [_delegate getPlaybackTime];
+	}
 	NSString *stringPlaibackTime = [self stringFromPlaybackTime:_playbackTime];
 	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"[%@]", stringPlaibackTime] forState:UIControlStateNormal];
 }
@@ -330,7 +332,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (IBAction)addNoteButtonAction:(id)sender {
-	self.mediaItem = [_delegate getNowPlayingMediaItem];
+	self.mediaItem = _mediaItem;
 	[self autosetPlaybackTimeAndItsButtonLabel];
 	[self startEditingAddNote];
 }
@@ -342,7 +344,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (PNMusicItem *)getOrCreatePNMusicItemFromMediaItem:(MPMediaItem *)mediaItem {
-	NSManagedObjectContext *moc = [_delegate managedObjectContext];
+	NSManagedObjectContext *moc = _managedObjectContext;
 	NSEntityDescription *entityDescription = [NSEntityDescription 
 											  entityForName:@"PNMusicItem"
 											  inManagedObjectContext:moc];
@@ -401,14 +403,14 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
 	NSLog(@"add note '%@' at time: %f for mediaItem: %@", text, playbackTime, mediaItem);
 	
-	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:[_delegate managedObjectContext]];
+	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:_managedObjectContext];
 	note.musicItem = [self getOrCreatePNMusicItemFromMediaItem:mediaItem];
 	note.text = text;
 	note.timeAdded = [NSDate date];
 	note.playbackTime = [NSNumber numberWithDouble:playbackTime];
 	
 	NSError *error;
-	if (![[_delegate managedObjectContext] save:&error]) {
+	if (![_managedObjectContext save:&error]) {
 		// Handle the error.
 		NSLog(@"Error while saving note: %@, %@", error, [error userInfo]);
 	}
