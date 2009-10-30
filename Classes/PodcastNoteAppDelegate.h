@@ -11,7 +11,7 @@
 @interface PodcastNoteAppDelegate : NSObject <UIApplicationDelegate> {
 
     NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;	    
+    NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
 	
     UIWindow *window;

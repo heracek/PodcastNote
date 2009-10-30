@@ -10,6 +10,7 @@
 #import "PNNoteTableViewCell.h"
 #import "PNMusicItem.h"
 #import "PNNote.h"
+#import "PNAddNoteController.h"
 
 @implementation PNWriteAndViewNotesTableViewController
 
@@ -328,8 +329,32 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (IBAction)addNoteButtonAction:(id)sender {
-	[self autosetPlaybackTimeAndItsButtonLabel];
-	[self startEditingAddNote];
+	PNAddNoteController *addNoteController = [[PNAddNoteController alloc] initWithNibName:@"PNAddNoteController" bundle:nil];
+	
+	// Create a new managed object context for the new book -- set its persistent store coordinator to the same as that from the fetched results controller's context.
+//	NSManagedObjectContext *addingContext = [[NSManagedObjectContext alloc] init];
+//	self.addingManagedObjectContext = addingContext;
+//	[addingContext release];
+//	
+//	[addingManagedObjectContext setPersistentStoreCoordinator:[[fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
+//	
+//	addViewController.book = (Book *)[NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:addingContext];
+	
+	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addNoteController];
+	
+	navController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+	
+    [[_delegate navigationController] presentModalViewController:navController animated:YES];
+	
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+	
+	[addNoteController release];
+	[navController release];
+	
+	
+	// original by heracek:
+	//[self autosetPlaybackTimeAndItsButtonLabel];
+	//[self startEditingAddNote];
 }
 
 - (IBAction)doneEditingButtonaAction:(id)sender {

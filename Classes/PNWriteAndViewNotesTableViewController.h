@@ -14,6 +14,7 @@
 
 @required
 - (NSTimeInterval)getPlaybackTime;
+- (UINavigationController*)navigationController;
 
 @end
 

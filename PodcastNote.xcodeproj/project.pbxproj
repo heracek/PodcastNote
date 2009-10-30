@@ -22,6 +22,8 @@
 		696A69D10FE2A15C0019251C /* PNMainTabsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 696A69CF0FE2A15C0019251C /* PNMainTabsViewController.xib */; };
 		698E27DF0FF673D10069D408 /* NowPlayingNavigationBackButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 698E27DE0FF673D10069D408 /* NowPlayingNavigationBackButton.png */; };
 		6999BC7E10602C4000A19C82 /* ABTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6999BC7D10602C4000A19C82 /* ABTableViewCell.m */; };
+		69A1327A1098A31900ECE36A /* PNAddNoteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A132781098A31900ECE36A /* PNAddNoteController.m */; };
+		69A1327B1098A31900ECE36A /* PNAddNoteController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69A132791098A31900ECE36A /* PNAddNoteController.xib */; };
 		69B928810FF2C799007C41BB /* PNNowPlayingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */; };
 		69B928820FF2C799007C41BB /* PNNowPlayingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */; };
 		69B929550FF2E9B2007C41BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B929540FF2E9B2007C41BB /* MediaPlayer.framework */; };
@@ -54,6 +56,9 @@
 		698E27DE0FF673D10069D408 /* NowPlayingNavigationBackButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NowPlayingNavigationBackButton.png; path = images/NowPlayingNavigationBackButton.png; sourceTree = "<group>"; };
 		6999BC7C10602C4000A19C82 /* ABTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ABTableViewCell.h; path = external/ABTableViewCell.h; sourceTree = "<group>"; };
 		6999BC7D10602C4000A19C82 /* ABTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ABTableViewCell.m; path = external/ABTableViewCell.m; sourceTree = "<group>"; };
+		69A132771098A31900ECE36A /* PNAddNoteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNAddNoteController.h; sourceTree = "<group>"; };
+		69A132781098A31900ECE36A /* PNAddNoteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNAddNoteController.m; sourceTree = "<group>"; };
+		69A132791098A31900ECE36A /* PNAddNoteController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNAddNoteController.xib; path = Classes/PNAddNoteController.xib; sourceTree = "<group>"; };
 		69B9287E0FF2C798007C41BB /* PNNowPlayingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNowPlayingViewController.h; sourceTree = "<group>"; };
 		69B9287F0FF2C798007C41BB /* PNNowPlayingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNowPlayingViewController.m; sourceTree = "<group>"; };
 		69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PNNowPlayingViewController.xib; path = Classes/PNNowPlayingViewController.xib; sourceTree = "<group>"; };
@@ -102,6 +107,8 @@
 				691A459A1065285800A92B39 /* PNMusicItem.m */,
 				691A459B1065285800A92B39 /* PNNote.h */,
 				691A459C1065285800A92B39 /* PNNote.m */,
+				69A132771098A31900ECE36A /* PNAddNoteController.h */,
+				69A132781098A31900ECE36A /* PNAddNoteController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -144,6 +151,7 @@
 				696A69CF0FE2A15C0019251C /* PNMainTabsViewController.xib */,
 				69B928800FF2C798007C41BB /* PNNowPlayingViewController.xib */,
 				69CCB4620FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib */,
+				69A132791098A31900ECE36A /* PNAddNoteController.xib */,
 				8D1107310486CEB800E47090 /* PodcastNote-Info.plist */,
 			);
 			name = Resources;
@@ -225,6 +233,7 @@
 				69B928820FF2C799007C41BB /* PNNowPlayingViewController.xib in Resources */,
 				698E27DF0FF673D10069D408 /* NowPlayingNavigationBackButton.png in Resources */,
 				69CCB4640FFE4F860093EA1F /* PNWriteAndViewNotesTableViewController.xib in Resources */,
+				69A1327B1098A31900ECE36A /* PNAddNoteController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +255,7 @@
 				691A459D1065285800A92B39 /* PNMusicItem.m in Sources */,
 				691A459E1065285800A92B39 /* PNNote.m in Sources */,
 				69EC75CF1080830D00E03BD2 /* PNMusicItemsTableViewController.m in Sources */,
+				69A1327A1098A31900ECE36A /* PNAddNoteController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
