@@ -60,7 +60,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
-	_writeAndViewNotesTVC.mediaItem = [_musicPlayerController nowPlayingItem];
+	_writeAndViewNotesTVC.musicItem = [PNMusicItem musicItemFromMediaItem:[_musicPlayerController nowPlayingItem] inManagedObjectContext:_managedObjectContext];
 	_writeAndViewNotesTVC.managedObjectContext = _managedObjectContext;
 	_writeAndViewNotesTVC.delegate = self;
 	

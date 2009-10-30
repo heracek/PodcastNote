@@ -27,10 +27,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-//	UINavigationController *vc = [self.viewControllers objectAtIndex:0];
-//	vc.topViewController.navigationItem.rightBarButtonItem = _nowPlayingBarButtonItem;
-	
+		
 	_musicItemsTableViewController.managedObjectContext = _managedObjectContext;
 }
 

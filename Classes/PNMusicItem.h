@@ -7,6 +7,7 @@
 //
 
 #import <CoreData/CoreData.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 
 @interface PNMusicItem :  NSManagedObject  
@@ -40,6 +41,9 @@
 
 
 @interface PNMusicItem (CoreDataGeneratedAccessors)
+
++ (PNMusicItem *)musicItemFromMediaItem:(MPMediaItem *)mediaItem inManagedObjectContext:(NSManagedObjectContext *)moc;
+
 - (void)addNotesObject:(NSManagedObject *)value;
 - (void)removeNotesObject:(NSManagedObject *)value;
 - (void)addNotes:(NSSet *)value;

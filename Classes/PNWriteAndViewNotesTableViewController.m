@@ -15,8 +15,7 @@
 
 @synthesize tableView=_tableView;
 @synthesize fetchedResultsController=_fetchedResultsController;
-@synthesize notesArray=_notesArray;
-@synthesize mediaItem=_mediaItem;
+@synthesize musicItem=_musicItem;
 @synthesize managedObjectContext=_managedObjectContext;
 @synthesize delegate=_delegate;
 
@@ -76,7 +75,6 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 
 
 - (void)dealloc {
-	[_notesArray release];
     [super dealloc];
 }
 
@@ -174,10 +172,8 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PNNote" inManagedObjectContext:moc];
 	[fetchRequest setEntity:entity];
 	
-	PNMusicItem *musicItem = (PNMusicItem *)[self getOrCreatePNMusicItemFromMediaItem:_mediaItem];
-	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:
-							  @"musicItem == %@", musicItem];
+							  @"musicItem == %@", _musicItem];
 	[fetchRequest setPredicate:predicate];
 	
 	// Create the sort descriptors array.
@@ -332,7 +328,6 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (IBAction)addNoteButtonAction:(id)sender {
-	self.mediaItem = _mediaItem;
 	[self autosetPlaybackTimeAndItsButtonLabel];
 	[self startEditingAddNote];
 }
@@ -340,71 +335,14 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (IBAction)doneEditingButtonaAction:(id)sender {
 	[self stopEditingAddNote];
 	
-	[self noteAddedToMediaItem:_mediaItem atPlaybackTime:_playbackTime withText:_addNoteTextView.text];
+	[self noteAddedToMusicItem:_musicItem atPlaybackTime:_playbackTime withText:_addNoteTextView.text];
 }
 
-- (PNMusicItem *)getOrCreatePNMusicItemFromMediaItem:(MPMediaItem *)mediaItem {
-	NSManagedObjectContext *moc = _managedObjectContext;
-	NSEntityDescription *entityDescription = [NSEntityDescription 
-											  entityForName:@"PNMusicItem"
-											  inManagedObjectContext:moc];
-	
-	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-	[request setEntity:entityDescription];
-	
-	NSNumber *persistentID = [mediaItem valueForProperty:MPMediaItemPropertyPersistentID];
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:
-							  @"persistentID == %@", persistentID];
-	[request setPredicate:predicate];
-	
-	[request setFetchLimit:1];
-	
-	PNMusicItem *pnMusicItem = nil;
-	
-	NSError *error;
-	NSArray *array = [moc executeFetchRequest:request error:&error];
-	if (array == nil || [array count] == 0) {
-		pnMusicItem = (PNMusicItem *)[NSEntityDescription
-									  insertNewObjectForEntityForName:@"PNMusicItem"
-									  inManagedObjectContext:moc];
-		pnMusicItem.persistentID = persistentID;
-	} else {
-		pnMusicItem = [array objectAtIndex:0];
-	}
-	
-	pnMusicItem.mediaType = [mediaItem valueForProperty:MPMediaItemPropertyMediaType];
-	pnMusicItem.title = [mediaItem valueForProperty:MPMediaItemPropertyTitle];
-	pnMusicItem.albumTitle = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTitle];
-	pnMusicItem.artist = [mediaItem valueForProperty:MPMediaItemPropertyArtist];
-	pnMusicItem.albumArtist = [mediaItem valueForProperty:MPMediaItemPropertyAlbumArtist];
-	pnMusicItem.genre = [mediaItem valueForProperty:MPMediaItemPropertyGenre];
-	pnMusicItem.composer = [mediaItem valueForProperty:MPMediaItemPropertyComposer];
-	pnMusicItem.playbackDuration = [mediaItem valueForProperty:MPMediaItemPropertyPlaybackDuration];
-	pnMusicItem.albumTrackNumber = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTrackNumber];
-	pnMusicItem.albumTrackCount = [mediaItem valueForProperty:MPMediaItemPropertyAlbumTrackCount];
-	pnMusicItem.discNumber = [mediaItem valueForProperty:MPMediaItemPropertyDiscNumber];
-	pnMusicItem.discCount = [mediaItem valueForProperty:MPMediaItemPropertyDiscCount];
-	
-	//pnMusicItem.artwork = [mediaItem valueForProperty:MPMediaItemPropertyArtwork];
-	
-	pnMusicItem.lyrics = [mediaItem valueForProperty:MPMediaItemPropertyLyrics];
-	pnMusicItem.isCompilation = [mediaItem valueForProperty:MPMediaItemPropertyIsCompilation];
-	
-	pnMusicItem.podcastTitle = [mediaItem valueForProperty:MPMediaItemPropertyPodcastTitle];
-	
-	pnMusicItem.playCount = [mediaItem valueForProperty:MPMediaItemPropertyPlayCount];
-	pnMusicItem.skipCount = [mediaItem valueForProperty:MPMediaItemPropertySkipCount];
-	pnMusicItem.rating = [mediaItem valueForProperty:MPMediaItemPropertyRating];
-	pnMusicItem.lastPlayedDate = [mediaItem valueForProperty:MPMediaItemPropertyLastPlayedDate];
-	
-	return pnMusicItem;
-}
-
-- (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
-	NSLog(@"add note '%@' at time: %f for mediaItem: %@", text, playbackTime, mediaItem);
+- (void)noteAddedToMusicItem:(PNMusicItem *)musicItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text {
+	NSLog(@"add note '%@' at time: %f for musicItem.persistentID: %qu", text, playbackTime, [musicItem.persistentID longLongValue]);
 	
 	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:_managedObjectContext];
-	note.musicItem = [self getOrCreatePNMusicItemFromMediaItem:mediaItem];
+	note.musicItem = _musicItem;
 	note.text = text;
 	note.timeAdded = [NSDate date];
 	note.playbackTime = [NSNumber numberWithDouble:playbackTime];

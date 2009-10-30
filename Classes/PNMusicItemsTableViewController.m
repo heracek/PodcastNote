@@ -8,6 +8,7 @@
 
 #import "PNMusicItemsTableViewController.h"
 #import "PNMusicItem.h"
+#import "PNWriteAndViewNotesTableViewController.h"
 
 @implementation PNMusicItemsTableViewController
 
@@ -23,14 +24,16 @@
 }
 */
 
-/*
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
+	self.navigationItem.backBarButtonItem.title = self.title;
+	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-*/
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -139,9 +142,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
+	
+	PNMusicItem* musicItem = (PNMusicItem *)[_fetchedResultsController objectAtIndexPath:indexPath];
+	
+	PNWriteAndViewNotesTableViewController *writeAndViewNotesTVC = [[PNWriteAndViewNotesTableViewController alloc]
+																	initWithNibName:@"PNWriteAndViewNotesTableViewController"
+																	bundle:nil];
+	writeAndViewNotesTVC.musicItem = musicItem;
+	writeAndViewNotesTVC.managedObjectContext = _managedObjectContext;
+//	writeAndViewNotesTVC.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+//	writeAndViewNotesTVC.navigationItem.leftBarButtonItem.style = UIBarButtonItemStyleBordered;
+	writeAndViewNotesTVC.navigationItem.title = musicItem.title;
+	
+	[self.navigationController pushViewController:writeAndViewNotesTVC animated:YES];
+	[writeAndViewNotesTVC release];
 }
 
 

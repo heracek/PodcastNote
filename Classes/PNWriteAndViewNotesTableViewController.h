@@ -29,9 +29,7 @@
 	
 	BOOL _isEditingNote;
 	NSTimeInterval _playbackTime;
-	MPMediaItem *_mediaItem;
-	
-	NSMutableArray *_notesArray;
+	PNMusicItem *_musicItem;
 	
 	NSManagedObjectContext *_managedObjectContext;
 	
@@ -40,17 +38,15 @@
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, retain) NSMutableArray *notesArray;
-@property (nonatomic, retain) MPMediaItem *mediaItem;
+@property (nonatomic, retain) PNMusicItem *musicItem;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) id<PNWriteAndViewNotesTableViewControllerDelegate> delegate;
 
 - (IBAction)addNoteButtonAction:(id)sender;
 - (IBAction)addNoteSetPlaybackTimeAction:(id)sender;
 - (IBAction)doneEditingButtonaAction:(id)sender;
-- (void)noteAddedToMediaItem:(MPMediaItem *)mediaItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
+- (void)noteAddedToMusicItem:(PNMusicItem *)musicItem atPlaybackTime:(NSTimeInterval)playbackTime withText:(NSString *)text;
 - (NSString *)stringFromPlaybackTime:(NSTimeInterval)playbackTime;
-- (PNMusicItem *)getOrCreatePNMusicItemFromMediaItem:(MPMediaItem *)mediaItem;
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath;
 
 @end
