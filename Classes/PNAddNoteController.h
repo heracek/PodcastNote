@@ -26,17 +26,32 @@
 	PNNote *_note;
 	
 	UITextView *_textView;
+	UILabel *_markerLabel;
+	UILabel *_nowPlayingTime;
+	UILabel *_nowPlayingTimeRemaning;
+	UISlider *_nowPlayingSlider;
+	
+	NSTimer *_refreshNowPlayingTimeViewsTimer;
 }
 
-@property (nonatomic, assign) id <PNAddNoteControllerDelegate> delegate;
+@property (nonatomic, retain) id <PNAddNoteControllerDelegate> delegate;
 @property (nonatomic, retain) PNMusicItem *musicItem;
 @property (nonatomic, assign) NSTimeInterval markerPlaybackTime;
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayerController;
 @property (nonatomic, retain) PNNote *note;
 
 @property (nonatomic, retain) IBOutlet UITextView *textView;
+@property (nonatomic, retain) IBOutlet UILabel *markerLabel;
+@property (nonatomic, retain) IBOutlet UILabel *nowPlayingTime;
+@property (nonatomic, retain) IBOutlet UILabel *nowPlayingTimeRemaning;
+@property (nonatomic, retain) IBOutlet UISlider *nowPlayingSlider;
 
-- (IBAction)save:(id)sender;
-- (IBAction)cancel:(id)sender;
+- (void)save:(id)sender;
+- (void)cancel:(id)sender;
+- (IBAction)setMarkerAction:(id)sender;
+- (void)refreshNowPlayingTimeViewsTimerAction:(id)sender;
+
+- (void)refreshMarkerLabel;
+- (void)refreshNowPlayingTimeViews;
 
 @end

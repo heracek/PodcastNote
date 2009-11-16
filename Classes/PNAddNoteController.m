@@ -17,7 +17,11 @@
 @synthesize musicPlayerController = _musicPlayerController;
 @synthesize note = _note;
 
-@synthesize textView=_textView;
+@synthesize textView = _textView;
+@synthesize markerLabel = _markerLabel;
+@synthesize nowPlayingTime = _nowPlayingTime;
+@synthesize nowPlayingTimeRemaning = _nowPlayingTimeRemaning;
+@synthesize nowPlayingSlider = _nowPlayingSlider;
 
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -59,6 +63,15 @@
 	_textView.contentInset = newTextInsets;
 	_textView.scrollIndicatorInsets = newTextInsets;
 	[_textView becomeFirstResponder];
+	
+	[self refreshNowPlayingTimeViews];
+	[self refreshMarkerLabel];
+	
+	_refreshNowPlayingTimeViewsTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+																		target:self
+																	  selector:@selector(refreshNowPlayingTimeViewsTimerAction:)
+																	  userInfo:nil
+																	   repeats:YES];
 }
 
 /*
@@ -81,15 +94,56 @@
 	// e.g. self.myOutlet = nil;
 	
 	self.textView = nil;
+	self.markerLabel = nil;
+	[_refreshNowPlayingTimeViewsTimer invalidate];
+	_refreshNowPlayingTimeViewsTimer = nil;
 }
 
 
 - (void)dealloc {
-    [super dealloc];
+	self.delegate = nil;
+	self.musicItem = nil;
+	self.musicPlayerController = nil;
+	self.note = nil;
+	
+	[super dealloc];
 }
 
 #pragma mark --
-#pragma mark UINavigationBar items actions
+
+- (NSString *)stringFromPlaybackTime:(NSTimeInterval)playbackTime {
+	int intPlaybecTime = rint(playbackTime);
+	int hours = intPlaybecTime / (60 * 60);
+	int minutes = (intPlaybecTime / 60) % 60;
+	int seconds = intPlaybecTime % 60;
+	
+	NSString *stringPlaibackTime;
+	if (hours != 0) {
+		stringPlaibackTime = [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+	} else {
+		stringPlaibackTime = [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+	}
+	
+	return stringPlaibackTime;
+}
+
+- (void)refreshMarkerLabel {
+	_markerLabel.text = [NSString stringWithFormat:@"Marker: %@",
+						 [self stringFromPlaybackTime:_markerPlaybackTime]];
+}
+
+- (void)refreshNowPlayingTimeViews {
+	NSTimeInterval currentPlaybackTime = [_musicPlayerController currentPlaybackTime];
+	NSTimeInterval playbackDuration = [_musicItem.playbackDuration doubleValue];
+	
+	_nowPlayingTime.text = [self stringFromPlaybackTime:currentPlaybackTime];
+	_nowPlayingTimeRemaning.text = [NSString stringWithFormat:@"-%@",
+									[self stringFromPlaybackTime:playbackDuration - currentPlaybackTime]];
+	_nowPlayingSlider.value = currentPlaybackTime / playbackDuration;
+}
+
+#pragma mark --
+#pragma mark actions
 
 - (IBAction)save:(id)sender {
 	_note.musicItem = _musicItem;
@@ -103,6 +157,17 @@
 
 - (IBAction)cancel:(id)sender {
 	[_delegate addNoteViewController:self didFinishWithSave:NO];
+}
+
+- (IBAction)setMarkerAction:(id)sender {
+	_markerPlaybackTime = [_musicPlayerController currentPlaybackTime];
+	
+	[self refreshNowPlayingTimeViews];
+	[self refreshMarkerLabel];
+}
+
+- (void)refreshNowPlayingTimeViewsTimerAction:(id)sender {
+	[self refreshNowPlayingTimeViews];
 }
 
 @end
