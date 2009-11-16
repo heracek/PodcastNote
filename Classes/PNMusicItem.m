@@ -87,7 +87,7 @@
 	pnMusicItem.rating = [mediaItem valueForProperty:MPMediaItemPropertyRating];
 	pnMusicItem.lastPlayedDate = [mediaItem valueForProperty:MPMediaItemPropertyLastPlayedDate];
 	
-	return [pnMusicItem autorelease];
+	return pnMusicItem;
 }
 
 @end

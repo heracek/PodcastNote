@@ -11,9 +11,11 @@
 
 @implementation PNAddNoteController
 
+@synthesize delegate = _delegate;
 @synthesize musicItem = _musicItem;
+@synthesize markerPlaybackTime = _markerPlaybackTime;
 @synthesize musicPlayerController = _musicPlayerController;
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize note = _note;
 
 @synthesize textView=_textView;
 
@@ -33,19 +35,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Y"
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Y"
 																   style:UIBarButtonItemStyleDone
-																  target:nil
-																  action:nil];
+																  target:self
+																  action:@selector(save:)];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"N"
 																	 style:UIBarButtonItemStyleBordered
-																	target:nil
-																	action:nil];
+																	target:self
+																	action:@selector(cancel:)];
 	
-	self.navigationItem.rightBarButtonItem = doneButton;
+	self.navigationItem.rightBarButtonItem = saveButton;
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	
-	[doneButton release];
+	[saveButton release];
 	[cancelButton release];
 	
 	_textView.font = [UIFont systemFontOfSize:16.0];
@@ -84,6 +86,23 @@
 
 - (void)dealloc {
     [super dealloc];
+}
+
+#pragma mark --
+#pragma mark UINavigationBar items actions
+
+- (IBAction)save:(id)sender {
+	_note.musicItem = _musicItem;
+	_note.text = _textView.text;
+	_note.playbackTime = [NSNumber numberWithDouble:_markerPlaybackTime];
+	_note.timeAdded = [NSDate date];
+	_note.timeEdited = _note.timeAdded;
+	
+	[_delegate addNoteViewController:self didFinishWithSave:YES];
+}
+
+- (IBAction)cancel:(id)sender {
+	[_delegate addNoteViewController:self didFinishWithSave:NO];
 }
 
 @end

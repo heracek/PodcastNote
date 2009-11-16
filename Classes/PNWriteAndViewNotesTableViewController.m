@@ -10,15 +10,15 @@
 #import "PNNoteTableViewCell.h"
 #import "PNMusicItem.h"
 #import "PNNote.h"
-#import "PNAddNoteController.h"
 
 @implementation PNWriteAndViewNotesTableViewController
 
-@synthesize tableView=_tableView;
-@synthesize fetchedResultsController=_fetchedResultsController;
-@synthesize musicItem=_musicItem;
-@synthesize managedObjectContext=_managedObjectContext;
-@synthesize delegate=_delegate;
+@synthesize tableView = _tableView;
+@synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize musicItem = _musicItem;
+@synthesize musicPlayerController = _musicPlayerController;
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize delegate = _delegate;
 
 static NSString *kNoteCellIdentifier = @"NoteCell";
 
@@ -315,7 +315,7 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 - (void)autosetPlaybackTimeAndItsButtonLabel {
 	_playbackTime = 0;
 	if (_delegate != nil) {
-		_playbackTime = [_delegate getPlaybackTime];
+		_playbackTime = [_delegate playbackTime];
 	}
 	NSString *stringPlaibackTime = [self stringFromPlaybackTime:_playbackTime];
 	[_addNoteSetPlaybackTime setTitle:[NSString stringWithFormat:@"[%@]", stringPlaibackTime] forState:UIControlStateNormal];
@@ -329,16 +329,14 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 }
 
 - (IBAction)addNoteButtonAction:(id)sender {
-	PNAddNoteController *addNoteController = [[PNAddNoteController alloc] initWithNibName:@"PNAddNoteController" bundle:nil];
+	PNNote *note = (PNNote *)[NSEntityDescription insertNewObjectForEntityForName:@"PNNote" inManagedObjectContext:_managedObjectContext];
 	
-	// Create a new managed object context for the new book -- set its persistent store coordinator to the same as that from the fetched results controller's context.
-//	NSManagedObjectContext *addingContext = [[NSManagedObjectContext alloc] init];
-//	self.addingManagedObjectContext = addingContext;
-//	[addingContext release];
-//	
-//	[addingManagedObjectContext setPersistentStoreCoordinator:[[fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
-//	
-//	addViewController.book = (Book *)[NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:addingContext];
+	PNAddNoteController *addNoteController = [[PNAddNoteController alloc] initWithNibName:@"PNAddNoteController" bundle:nil];
+	addNoteController.delegate = self;
+	addNoteController.musicItem = _musicItem;
+	addNoteController.markerPlaybackTime = [_delegate playbackTime];
+	addNoteController.musicPlayerController = _musicPlayerController;
+	addNoteController.note = note;
 	
 	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addNoteController];
 	
@@ -408,6 +406,25 @@ static NSString *kNoteCellIdentifier = @"NoteCell";
 	_addNoteTextViewWithControls.alpha = 0.0;
     self.view.frame = frame;
     [UIView commitAnimations];
+}
+
+#pragma mark PNAddNoteControllerDelegate methods
+
+- (void)addNoteViewController:(PNAddNoteController *)controller didFinishWithSave:(BOOL)save {
+	NSLog(@"addNoteViewController:didFinishWithSave:%@", save ? @"YES":@"NO");
+	
+	if (save) {
+		NSError *error;
+		if (![_managedObjectContext save:&error]) {
+			// Update to handle the error appropriately.
+			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+	} else {
+		[_managedObjectContext rollback];
+	}
+	
+	[_delegate dismissModalViewControllerAnimated:YES];
 }
 
 @end

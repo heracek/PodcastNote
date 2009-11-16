@@ -63,6 +63,7 @@
 	_writeAndViewNotesTVC.musicItem = [PNMusicItem musicItemFromMediaItem:[_musicPlayerController nowPlayingItem] inManagedObjectContext:_managedObjectContext];
 	_writeAndViewNotesTVC.managedObjectContext = _managedObjectContext;
 	_writeAndViewNotesTVC.delegate = self;
+	_writeAndViewNotesTVC.musicPlayerController = _musicPlayerController;
 	
 	UIBarButtonItem *newBackButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navigationBackButton];
 	self.navigationItem.leftBarButtonItem = newBackButtonItem;
@@ -132,12 +133,17 @@
 #pragma mark -
 #pragma mark PNWriteAndViewNotesTableViewControllerDelegate methods
 
-- (NSTimeInterval)getPlaybackTime {
+- (NSTimeInterval)playbackTime {
 	if (!_musicPlayerController) {
 		return 0.0;
 	}
 	
 	return _musicPlayerController.currentPlaybackTime;
+}
+
+- (UINavigationController*)navigationController {
+	NSLog(@"[super navigationController]: %@", [super navigationController]);
+	return [super navigationController];
 }
 
 @end
